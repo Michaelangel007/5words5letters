@@ -1,5 +1,6 @@
 /*
 Copyleft (C) Michaelangel007, Oct 2022
+https://github.com/Michaelangel007/5words5letters
 Optimized wordle-inspired solver that is significantly faster then the one Matt Parker wrote.
 
 Word List downloaded from:
