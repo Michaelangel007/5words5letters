@@ -60,7 +60,7 @@ void Init()
     memset( gaSolutions, 0, sizeof( gaSolutions ) );  // Scatter
 }
 
-// Read raw word file where words are of varying length
+// Read raw word file where words are of varying length, assumes all words are lowercase
 // ======================================================================
 void Read4( const char *filename )
 {
@@ -78,7 +78,7 @@ void Read4( const char *filename )
     fclose( file );
 }
 
-// Parses dictionary reading all 5 letter words, assumes in already sorted format
+// Parses dictionary reading all 5 letter words
 // ======================================================================
 void Parse()
 {
@@ -102,7 +102,7 @@ void Parse()
 
         if (len == NUM_CHARS)
         {
-            int   nHash = 0;
+            int nHash = 0;
             for( int iLetter = 0; iLetter < NUM_CHARS; ++iLetter )
                 nHash |= 1 << (pText[iLetter] - 'a');  // convert 7-bit ASCII string to 26-bit bit mask
 
@@ -110,10 +110,9 @@ void Parse()
             gaWords[ nUniqueWords ] = pText;
             gaHash [ nUniqueWords ] = nHash;
 
-            if (__builtin_popcount(gaHash[nUniqueWords]) == NUM_CHARS) // Only accept words with 5 letters, trivial reject words that have duplicate letters
+            if (__builtin_popcount(gaHash[nUniqueWords]) == NUM_CHARS)  // Only accept words with 5 letters, trivial reject words that have duplicate letters
             {
-                // if this hash already exists skip anagrams
-                bool found = false;
+                bool found = false;  // if this hash already exists skip anagrams
                 for (int word = 0; word < nUniqueWords; ++word)
                 {
                     if (gaHash[ nUniqueWords ] == gaHash[ word ])
@@ -193,7 +192,7 @@ void Search3()
                         continue;
 
                     int nHash3   = nHash2 | gaHash[ word3 ];
-                    int nOffset4 = gaNeighbors[ word3 ][ 0 ];
+                    int nOffset4 = gaNeighbors[ word3 ][ 0 ]; // [0] = length of valid neighbors
 
                     for (int iOffset4 = 1; iOffset4 < nOffset4; ++iOffset4)
                     {
