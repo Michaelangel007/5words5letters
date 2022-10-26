@@ -1,7 +1,7 @@
 /*
 Copyleft (C) Michaelangel007, Oct 2022
 https://github.com/Michaelangel007/5words5letters
-Optimized wordle-inspired solver that is significantly faster then the one Matt Parker wrote.
+Optimized Jotto / wordle-inspired solver that is significantly faster then the Python one Matt Parker wrote.
 
 Word List downloaded from:
 * https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt
@@ -24,6 +24,16 @@ See:
 #ifdef _MSC_VER 
     #include <intrin.h>                 // https://stackoverflow.com/questions/3849337/msvc-equivalent-to-builtin-popcount
     #define __builtin_popcount __popcnt // same as gcc; also known as Hamming Weight, https://en.wikipedia.org/wiki/Hamming_weight
+#endif
+
+#if _WIN32                // MS-DOS / Windows
+    #define EOL_CHAR '\r' // 0x0D 0x0A
+    #define EOL_SIZE 2    // CR LF
+    #define ALIGN64(t) __declspec((align(64))t       /* MSVC alignment is pre type*/
+#else                     // Un*x
+    #define EOL_CHAR '\n' // 0x0A
+    #define EOL_SIZE 1    // LF
+    #define ALIGN64(t) t __attribute__((aligned(64)) /* gcc/clang alignment is post type */
 #endif
 
 // Globals
@@ -77,7 +87,7 @@ void Read4( const char *filename )
         exit( printf( "ERROR: Couldn't allocate memory for file. %d KB > %d KB\n", (int)gnBufferSize/1024, (int)sizeof(gaBufferText)/1024 ) );
 
     gnBufferSize = fread( gaBufferText, 1, sizeof(gaBufferText)-2, file );
-    gaBufferText[ gnBufferSize+0 ] = '\n';
+    gaBufferText[ gnBufferSize+0 ] = EOL_CHAR;
     gaBufferText[ gnBufferSize+1 ] = 0;
 
     fclose( file );
@@ -99,10 +109,10 @@ void Parse()
     {
         char *eow = pText;
 
-        while (*eow != '\n')
+        while (*eow != EOL_CHAR)
             eow++;
 
-        size_t len = (--eow - pText);
+        size_t len = (eow - pText);
         *eow = 0;
 
         if (len == NUM_CHARS)
@@ -128,7 +138,7 @@ void Parse()
             }
         }
         nTotalWords++;
-        pText = eow + 2; // skip CR
+        pText = eow + EOL_SIZE;
     }
     gnUniqueWords = nUniqueWords;
 
