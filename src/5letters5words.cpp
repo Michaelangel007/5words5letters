@@ -29,11 +29,9 @@ See:
 #if _WIN32                // MS-DOS / Windows
     #define EOL_CHAR '\r' // 0x0D 0x0A
     #define EOL_SIZE 2    // CR LF
-    #define ALIGN64(t) __declspec((align(64))t       /* MSVC alignment is pre type*/
 #else                     // Un*x
     #define EOL_CHAR '\n' // 0x0A
     #define EOL_SIZE 1    // LF
-    #define ALIGN64(t) t __attribute__((aligned(64)) /* gcc/clang alignment is post type */
 #endif
 
 // Globals
