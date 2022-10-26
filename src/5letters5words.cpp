@@ -257,7 +257,7 @@ void Solutions()
 // ======================================================================
 int main( int nArg, char *aArg[] )
 {
-    std::chrono::steady_clock::time_point begin = std::chrono::high_resolution_clock::now();
+    auto begin = std::chrono::high_resolution_clock::now();
 
         int gnCurThreads = 0; // auto-detect, use max threads
         if (nArg > 1)
@@ -275,8 +275,8 @@ int main( int nArg, char *aArg[] )
         Search3();
         Solutions();
 
-    std::chrono::steady_clock::time_point end  = std::chrono::high_resolution_clock::now();
-    int ms    = (int) std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+    auto end    = std::chrono::high_resolution_clock::now();
+    int ms      = (int) std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
     int minutes = (ms / 1000) / 60;
     int seconds = (ms / 1000) % 60;
     printf( "%d:%02d = %d seconds (%d ms)\n", minutes, seconds, (ms / 1000), ms );
