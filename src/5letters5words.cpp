@@ -56,19 +56,6 @@ See:
           short  gaSolutions[ MAX_THREADS ];
           short  gaOutput   [ MAX_THREADS ][ MAX_NEIGHBORS ]; // Each thread outputs 5x words, maximum 538*5 = 2690
 
-    // convert 7-bit ASCII string to 26-bit bit mask
-    //     const int MAX_HASH = 0x3FFFFFF;  // (1 << 27) - 1
-    // ======================================================================
-    int string_to_hash( const char *text )
-    {
-        int hash = 0;
-
-        for (int letter = 0; letter < NUM_CHARS; ++letter)
-            hash |= 1 << (text[ letter ] - 'a');
-
-        return hash;
-    }
-
 // ======================================================================
 void Init()
 {
@@ -117,9 +104,13 @@ void Parse()
 
         if (len == NUM_CHARS)
         {
+            int   nHash = 0;
+            for( int iLetter = 0; iLetter < NUM_CHARS; ++iLetter )
+                nHash |= 1 << (pText[iLetter] - 'a');  // convert 7-bit ASCII string to 26-bit bit mask
+
             nLengthWords++;
             gaWords[ nUniqueWords ] = pText;
-            gaHash [ nUniqueWords ] = string_to_hash( pText );
+            gaHash [ nUniqueWords ] = nHash;
 
             if (__builtin_popcount(gaHash[nUniqueWords]) == NUM_CHARS) // Only accept words with 5 letters, trivial reject words that have duplicate letters
             {
